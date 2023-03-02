@@ -1,3 +1,5 @@
+##毎日の応答時間
+##とりあえずみんな一緒の時間に通知が来る
 import sys
 import os
 
@@ -26,5 +28,6 @@ line_bot_api = LineBotApi(config.LINE_CHANNEL_ACCESS_TOKEN)
 #config.pyで設定したチャネルシークレット
 handler = WebhookHandler(config.LINE_CHANNEL_SECRET)
 
-def get_img_access(event):
+
+def response_time(event):
     return "hello"
