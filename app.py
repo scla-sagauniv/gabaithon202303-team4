@@ -24,6 +24,10 @@ line_bot_api = LineBotApi(os.environ.get('LINE_CHANNEL_ACCESS_TOKEN'))
 handler = WebhookHandler(os.environ.get('LINE_CHANNEL_SECRET'))
 
 
+@app.route("/", methods=['GET'])
+def health_check():
+    return 'OK'
+
 @app.route("/callback", methods=['POST'])
 def callback():
     # get X-Line-Signature header value
