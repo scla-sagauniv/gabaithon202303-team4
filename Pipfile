@@ -5,6 +5,8 @@ name = "pypi"
 
 [packages]
 line-bot-sdk = "*"
+install = "*"
+python-dotenv = "*"
 
 [dev-packages]
 
