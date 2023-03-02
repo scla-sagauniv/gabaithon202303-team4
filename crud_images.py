@@ -24,7 +24,6 @@ def insert(state):
         'uid': state['uid'],
         'url': state['url'],
         'labels': state['labels'],
-        'is_open_data': state['is_open_data']
     }]
     url = f'{base_url}/{table}'
     req = request.Request(url=url, headers=headers, data=json.dumps(data).encode())
@@ -36,8 +35,7 @@ def insert(state):
 # data= {
 #     'uid': '12afafa',
 #     'url': 'http://sagau.ac.jp',
-#     'labels': 'cat',
-#     'is_open_data': False
+#     'labels': 'cat'
 # }
 # insert(data)
 
