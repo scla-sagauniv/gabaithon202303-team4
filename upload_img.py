@@ -4,6 +4,8 @@ import tempfile
 import os
 import urllib.request
 
+from crud_images import insert
+
 #Lineメッセージングプラットフォーム上でチャットボットを構築するためのライブラリであるLine Messaging API SDKで提供されるクラス
 from linebot import (
   LineBotApi, WebhookHandler
@@ -39,13 +41,18 @@ AZURE_STORAGE_CONTAINER_NAME = config.AZURE_STORAGE_CONTAINER_NAME
 
 AZURE_STORAGE_ACCOUNT_NAME = config.AZURE_STORAGE_ACCOUNT_NAME
 
-def register_img(event):
-  ##LINE Messaging APIからの画像をAzure Blob Storageに保存する
+def handle_message(event):
+  if event.reply_token == "00000000000000000000000000000000":
+    return
+  # # LINE Messaging APIからの画像をAzure Blob Storageに保存する
   message_id = event.message.id
-
   message_content = line_bot_api.get_message_content(message_id)
 
-  # Azure Storage SDKの初期
+  #uidの取得
+  uid = event.source.user_id
+
+
+  # Azure Storage SDKの初期化
   blob_service_client = BlobServiceClient.from_connection_string(AZURE_STORAGE_CONNECTION_STRING)
   container_client = blob_service_client.get_container_client(AZURE_STORAGE_CONTAINER_NAME)
 
@@ -57,23 +64,49 @@ def register_img(event):
     for chunk in message_content.iter_content():
       # fd.write(chunk)
       tmp += chunk
-  
-  file_name = f"{message_id}.jpg"
   #保存するファイルの名前
+  file_name = f"{message_id}.jpg"
   blob_client = container_client.get_blob_client(file_name)
   blob_client.upload_blob(tmp, overwrite=True)
   os.remove(temp_local_filename)
 
-  #画像をクライアントに送り返す
-  # 今回は画像をオウム返しするのでfile_nameとなっているが、本番ではDBからとってくる
-  blob_client = container_client.get_blob_client(file_name)
-  image_data = blob_client.download_blob().readall()
   contenturl = f"https://{AZURE_STORAGE_ACCOUNT_NAME}.blob.core.windows.net/{AZURE_STORAGE_CONTAINER_NAME}/{file_name}"
-  print(contenturl)
-  image_message = ImageSendMessage(original_content_url=f"https://{AZURE_STORAGE_ACCOUNT_NAME}.blob.core.windows.net/{AZURE_STORAGE_CONTAINER_NAME}/{file_name}", preview_image_url=f"https://{AZURE_STORAGE_ACCOUNT_NAME}.blob.core.windows.net/{AZURE_STORAGE_CONTAINER_NAME}/{file_name}")
 
-  #LineBotAPIに送信
+  data = {
+    'uid': uid,
+    'url': contenturl,
+    'labels': '',
+  }
+
+  insert(data)
+
+  
+
+  #公開範囲を訪ねる
   # line_bot_api.reply_message(
   #   event.reply_token,
+  #   TextMessage("公開範囲を決めてください")
   # )
-    
+
+  
+
+
+
+  #とってくる画像のパス
+  blob_client = container_client.get_blob_client(file_name)
+  # image_data = blob_client.download_blob().readall()
+  
+  
+
+  reply_message = TextSendMessage(text = "画像を登録しました")
+
+  
+  
+
+
+  #LineBotAPIに送信
+  line_bot_api.reply_message(
+    event.reply_token,
+    reply_message
+  )
+

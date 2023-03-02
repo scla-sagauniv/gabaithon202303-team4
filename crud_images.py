@@ -43,8 +43,8 @@ def insert(state):
 
 
 #テーブルからURLをとってくる
-def fetch(uid):
-    where = {"uid": uid }
+def fetch(url):
+    where = {"url": url }
     # print(where)
     where_encoded = parse.quote(json.dumps(where), safe=":/")
     url = f'{base_url}/{table}?search={where_encoded}'
