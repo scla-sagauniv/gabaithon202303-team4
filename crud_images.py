@@ -53,11 +53,32 @@ def fetch(url):
     return result
 
 # uid = "12afafa"
-# print(fetch(uid))
+# print(fetch(uid)
+
+def get_previous_labels(uuid):
+    where = {"uuid": uuid}
+    where_encoded = parse.quote(json.dumps(where), safe=":/")
+    url = f'{base_url}/{table}?search={where_encoded}'
+    req = request.Request(url=url, headers=headers)
+    result = json.loads(print_res_from_req(req=req))
+    # fetchURL = result[0]['url']
+    return result[0]['labels']
+
+# print(get_previous_labels('b03f8ad8-386e-44aa-8ff0-47de4b0ec722'))
+
 
 def update_images(data):
     where = {'uuid': data['uuid']}
-    value = {'labels': data['labels']}
+    previous_labels = get_previous_labels(data['uuid'])
+    new_labels = data['labels']
+    if previous_labels:  
+        # 以前のラベル値があれば、新しいラベル値を追加して文字列を作成
+        labels = f"{previous_labels},{new_labels}"
+    else:
+        # 以前のラベル値がなければ、新しいラベル値だけを文字列にする
+        labels = new_labels
+
+    value = {'labels': labels}
     data = { 'condition': where, 'set': value }
     url = f'{base_url}/{table}'
     req = request.Request(url=url, headers=headers, data=json.dumps(data).encode(), method='PUT')
@@ -66,6 +87,6 @@ def update_images(data):
 
 # data= {
 #     'uuid': 'b03f8ad8-386e-44aa-8ff0-47de4b0ec722',
-#     'labels': 'fox'
+#     'labels': 'bear'
 # }
 # update_images(data)
