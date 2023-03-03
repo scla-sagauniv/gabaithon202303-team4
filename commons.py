@@ -21,6 +21,12 @@ DB_AUTH_INFO = os.environ.get('DB_AUTH_INFO')
 DB_BASIC_AUTH_TOKEN = base64.b64encode(DB_AUTH_INFO.encode()).decode()
 DB_REQUEST_HEADERS = {'Authorization': f'Basic {DB_BASIC_AUTH_TOKEN}'}
 
+#config.pyで設定したAzure Blob Storageの接続文字列
+AZURE_STORAGE_CONNECTION_STRING = os.environ.get('AZURE_STORAGE_CONNECTION_STRING')
+#config.pyで設定したAzure Blob Storageのコンテナ名
+AZURE_STORAGE_CONTAINER_NAME = os.environ.get('AZURE_STORAGE_CONTAINER_NAME')
+AZURE_STORAGE_ACCOUNT_NAME = os.environ.get('AZURE_STORAGE_ACCOUNT_NAME')
+
 class TableName(Enum):
     USERS = 'users'
     IMAGES = 'images'
