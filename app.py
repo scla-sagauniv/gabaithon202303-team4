@@ -24,6 +24,7 @@ from dotenv import load_dotenv
 from commons import *
 from setup import setup
 from exec_time import ExecTime
+from img_labeling import *
 
 load_dotenv(verbose=True)
 dotenv_path = join(dirname(__file__), '.env')
@@ -87,6 +88,22 @@ def on_postback(event):
     if PostbackEventAction(params[0].split('=')[1]) == PostbackEventAction.SETUP:
         print(params[1].split('=')[1], params[2].split('=')[1], params[3].split('=')[1])
         setup(params[1].split('=')[1], int(params[2].split('=')[1]), params[3].split('=')[1])
+        return
+    if PostbackEventAction(params[0].split('=')[1]) == PostbackEventAction.LABELING:
+        if params[3].split('=')[1] == 'ImageLabelCategory.WEATHER':
+            set_img_labeling(params[2].split('=')[1], params[4].split('=')[1])
+            get_img_labeling(params[1].split('=')[1], params[2].split('=')[1], ImageLabelCategory.TEMPERATURE)
+        else:
+            set_img_labeling(params[2].split('=')[1], params[4].split('=')[1])
+            # image_data = blob_client.download_blob().readall()
+            reply_message = TextSendMessage(text = "画像を登録しました")
+            #LineBotAPIに送信
+            line_bot_api.reply_message(
+                event.reply_token,
+                reply_message
+            )
+
+
         
 
 @handler.add(FollowEvent)
@@ -137,7 +154,7 @@ def handle_message(event):
     'url': contenturl,
     'labels': '',
   }
-  insert(data)
+  uuid = insert(data)
 
   #公開範囲を訪ねる
   # line_bot_api.reply_message(
@@ -147,13 +164,7 @@ def handle_message(event):
 
   #とってくる画像のパス
   blob_client = container_client.get_blob_client(file_name)
-  # image_data = blob_client.download_blob().readall()
-  reply_message = TextSendMessage(text = "画像を登録しました")
-  #LineBotAPIに送信
-  line_bot_api.reply_message(
-    event.reply_token,
-    reply_message
-  )
+  get_img_labeling(uid, uuid)
 
 
 

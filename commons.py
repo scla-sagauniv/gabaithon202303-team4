@@ -42,6 +42,20 @@ class SetupStep(Enum):
 
 class PostbackEventAction(Enum):
     SETUP = 'setup'
+    LABELING = 'labeling'
+
+class ImageLabel(Enum):
+    SUNY = {'label': 'suny', 'display_label': '晴れ'}
+    RAINY = {'label': 'rainy', 'display_label': '雨'}
+    CLOUDY = {'label': 'cloudy', 'display_label': '曇り'}
+    SNOWY = {'label': 'snowy', 'display_label': '雪'}
+    HOT = {'label': 'hot', 'display_label': '暑い'}
+    COLD = {'label': 'cold', 'display_label': '寒い'}
+    NONE = {'label': 'none', 'display_label': '常温'}
+
+class ImageLabelCategory:
+    WEATHER = [ImageLabel.SUNY, ImageLabel.RAINY, ImageLabel.CLOUDY, ImageLabel.SNOWY]
+    TEMPERATURE = [ImageLabel.HOT, ImageLabel.COLD, ImageLabel.NONE]
 
 def exec_api_request(req):
     '''

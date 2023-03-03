@@ -18,9 +18,9 @@ headers = {'Authorization': f'Basic {basic_auth_token}'}
 
 #テーブルに挿入する
 def insert(state):
-    
+    uuid = str(uuid.uuid4())
     data = [{
-        'uuid': str(uuid.uuid4()),
+        'uuid': uuid,
         'uid': state['uid'],
         'url': state['url'],
         'labels': state['labels'],
@@ -30,7 +30,7 @@ def insert(state):
     print_res_from_req(req=req)
 
     
-    return 
+    return uuid
 
 # data= {
 #     'uid': '12afafa',

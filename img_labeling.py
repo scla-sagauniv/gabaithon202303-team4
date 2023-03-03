@@ -3,6 +3,7 @@ from linebot.models import (
 )
 
 from commons import *    
+from crud_images import update_images
 
 def create_postback_quick_reply(uid, uuid, text, labels):
     '''
@@ -45,5 +46,5 @@ def get_img_labeling(uid, uuid, category):
     )
 
 def set_img_labeling(uuid, labels):
-    setter(uuid, labels)
+    update_images({uuid, labels})
     
