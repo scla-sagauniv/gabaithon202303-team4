@@ -8,6 +8,8 @@ line-bot-sdk = "*"
 install = "*"
 python-dotenv = "*"
 flask = "*"
+azure-storage-blob = "*"
+azure-identity = "*"
 
 [dev-packages]
 
