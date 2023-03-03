@@ -62,6 +62,11 @@ def callback():
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
     if event.message.text == 'setup':
+        message = "フォローありがとう!\n今から初期設定をしてもらうね!"
+        line_bot_api.reply_message(
+            event.reply_token,
+            TextSendMessage(text=message)
+        )
         setup(event.source.user_id, SetupStep.CREATE.value)
         return
     if event.message.text in ExecTime().merge_list():
@@ -97,7 +102,7 @@ def follow_message(event):
             event.reply_token,
             TextSendMessage(text=message)
         )
-        # setup(event.source.user_id, SetupStep.CREATE.value)
+        setup(event.source.user_id, SetupStep.CREATE.value)
 
 # 画像を保存してメッセージを返す
 @handler.add(MessageEvent, message=ImageMessage)
