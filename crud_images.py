@@ -54,4 +54,18 @@ def fetch(url):
 
 # uid = "12afafa"
 # print(fetch(uid))
-    
+
+def update_images(data):
+    where = {'uuid': data['uuid']}
+    value = {'labels': data['labels']}
+    data = { 'condition': where, 'set': value }
+    url = f'{base_url}/{table}'
+    req = request.Request(url=url, headers=headers, data=json.dumps(data).encode(), method='PUT')
+    print_res_from_req(req=req)
+    return 
+
+# data= {
+#     'uuid': 'b03f8ad8-386e-44aa-8ff0-47de4b0ec722',
+#     'labels': 'fox'
+# }
+# update_images(data)
